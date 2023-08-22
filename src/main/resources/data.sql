@@ -1,0 +1,1 @@
+INSERT INTO users(user_id, password) VALUES ('root', 'root')
