@@ -26,11 +26,11 @@ public class LoginController{
 
     @RequestMapping(value="login", method=RequestMethod.POST)
     public void login(@RequestBody User reqUser, HttpServletResponse res) {
-        String sessionId = userService.doLogin(reqUser);
-        if (sessionId != null){
+        try{
+            String sessionId = userService.doLogin(reqUser);
             res.setStatus(HttpStatus.OK.value());
             res.addCookie(new Cookie("sessionId", sessionId));
-        } else {
+        } catch (Exception e) {
             res.setStatus(HttpStatus.BAD_REQUEST.value());
         }
     }

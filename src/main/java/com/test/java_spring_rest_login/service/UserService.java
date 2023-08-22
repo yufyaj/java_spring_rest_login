@@ -9,6 +9,8 @@ import com.test.java_spring_rest_login.repository.UserRepository;
 import com.test.java_spring_rest_login.model.UserSessionEntity;
 import com.test.java_spring_rest_login.model.UserEntity;
 import com.test.java_spring_rest_login.model.UserInterface;
+import com.test.java_spring_rest_login.exception.NoUserException;
+import com.test.java_spring_rest_login.exception.MissMatchPassword;
 
 @Service
 public class UserService {
@@ -17,16 +19,16 @@ public class UserService {
     @Autowired
     UserSessionService sessionService;
 
-    public String doLogin(UserInterface reqUser){
+    public String doLogin(UserInterface reqUser) throws NoUserException, MissMatchPassword{
         Optional<UserEntity> findUser = userRepos.findByUserId(reqUser.getUserId());
         if (findUser.isEmpty()){
-            return null;
+            throw new NoUserException();
         }
         if (matchPassword(findUser.get(), reqUser)) {
             UserSessionEntity session = sessionService.create(reqUser.getUserId());
             return session.getSessionId();
         } else {
-            return null;
+            throw new MissMatchPassword();
         }
     }
 
